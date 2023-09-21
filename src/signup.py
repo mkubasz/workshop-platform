@@ -70,7 +70,7 @@ async def signup(signup: Signup):
     }
 
     status = httpx.post(
-        f"https://api.notion.com/v1/pages",
+        "https://api.notion.com/v1/pages",
         headers={
             "Content-Type": "application/json",
             "Authorization": f"Bearer {AUTHORIZATION}",
