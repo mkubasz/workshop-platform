@@ -1,0 +1,17 @@
+# Test your FastAPI endpoints
+
+GET http://127.0.0.1:8000/healthz
+Accept: application/json
+
+###
+
+POST http://127.0.0.1:8000/signup
+Content-Type: application/json
+
+{
+  "discord_id": "mkubasz",
+  "name": "Mateusz Kubaszek",
+    "password": "123456",
+   "email": "mkubasz@gmail.com",
+  "invoice": "somi"
+}
