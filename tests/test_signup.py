@@ -7,7 +7,11 @@ def test_signup(httpx_mock):
     client = TestClient(app)
     response = client.post("/signup",
                            json={
-                               "discord_id": "1234", "name": "test", "password": "test", "email": "test", "invoice": "test"
+                               "discord_id": "1234",
+                               "name": "test",
+                               "password": "test",
+                               "email": "test",
+                               "invoice": "test"
                            })
     assert response.status_code == 201
 
