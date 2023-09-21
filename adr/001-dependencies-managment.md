@@ -20,4 +20,4 @@ linters:
 pre-commit
 ## Consequences
 
-Red flags foes brrrr
+Red flags goes brrrr
