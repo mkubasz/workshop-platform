@@ -10,7 +10,9 @@ DATABASE_ID = os.getenv('ATTENDEE_DATABASE_ID')
 AUTHORIZATION = os.getenv('AUTHORIZATION')
 
 router = APIRouter()
-class Attendee(BaseModel):
+
+
+class Signup(BaseModel):
     discord_id: str
     name: str
     password: str
@@ -19,8 +21,8 @@ class Attendee(BaseModel):
     created_at: datetime = datetime.now()
 
 
-@router.post("/signup/", status_code=201)
-async def signup(attendee: Attendee):
+@router.post("/signup", status_code=201)
+async def signup(signup: Signup):
     request_body = {
         "parent": {
             "database_id": DATABASE_ID
@@ -30,7 +32,7 @@ async def signup(attendee: Attendee):
                 "title": [
                     {
                         "text": {
-                            "content": attendee.discord_id
+                            "content": signup.discord_id
                         }
                     }
                 ]
@@ -39,7 +41,7 @@ async def signup(attendee: Attendee):
                 "rich_text": [
                     {
                         "text": {
-                            "content": attendee.name
+                            "content": signup.name
                         }
                     }]
             },
@@ -47,25 +49,26 @@ async def signup(attendee: Attendee):
                 "rich_text": [
                     {
                         "text": {
-                            "content": attendee.password
+                            "content": signup.password
                         }
                     }
                 ]
             },
             "email": {
-                "email": attendee.email
+                "email": signup.email
             },
             "invoice": {
                 "rich_text": [
                     {
                         "text": {
-                            "content": attendee.invoice
+                            "content": signup.invoice
                         }
                     }
                 ]
             }
         }
     }
+
     status = httpx.post(
         f"https://api.notion.com/v1/pages",
         headers={
@@ -76,6 +79,6 @@ async def signup(attendee: Attendee):
         json=request_body
     )
     if status.status_code == 201:
-        return {"status": "OK"}
+        return {"status": "ok"}
 
-    return JSONResponse(status_code=400, content={"status": "ERROR"})
+    return JSONResponse(status_code=400, content={"status": "error"})

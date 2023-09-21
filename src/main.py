@@ -1,14 +1,17 @@
 from fastapi import FastAPI
 from dotenv import load_dotenv
+
+from src import attend_workshop, signup
+
 load_dotenv()
-import attend_workshop
-import signup
 
 app = FastAPI()
 
-@app.get("/healthz/")
+
+@app.get("/healthz")
 async def healthz():
-    return {"status": "OK"}
+    return {"status": "ok"}
+
 
 app.include_router(signup.router)
 app.include_router(attend_workshop.router)

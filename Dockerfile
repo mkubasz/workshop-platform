@@ -1,5 +1,9 @@
 FROM python:3.11-slim-bullseye
 
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PYTHONIOENCODING=utf-8
+
 WORKDIR /app
 
 COPY requirements.txt .
