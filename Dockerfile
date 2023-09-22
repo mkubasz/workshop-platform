@@ -1,3 +1,4 @@
+# Use the Python 3.11 image as a base
 FROM python:3.11-slim-bullseye
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
@@ -6,9 +7,12 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
-COPY requirements.txt .
-RUN pip install -r requirements.txt
+COPY pyproject.toml pyproject.toml
+
+RUN pip install hatch && \
+    hatch env create && \
+    hatch install
 
 COPY . .
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["hatch", "env", "run", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
