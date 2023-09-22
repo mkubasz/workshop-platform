@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from src.core.config import ApiConfig
-from src.attend_workshop import router as attend_workshop_router
-from src.signup import router as signup_router
-from src.healthz import router as healthz_router
+from src.attend_workshop.router import router as attend_workshop_router
+from src.signup.router import router as signup_router
+from src.healthz.router import router as healthz_router
 from starlette.middleware.cors import CORSMiddleware
 from src.core.dependencies import get_api_config
 
