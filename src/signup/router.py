@@ -5,9 +5,9 @@ import httpx
 from fastapi import APIRouter
 from pydantic import BaseModel
 from fastapi.responses import JSONResponse
+from src.core.dependencies import get_api_config
 
-DATABASE_ID = os.getenv('ATTENDEE_DATABASE_ID')
-AUTHORIZATION = os.getenv('AUTHORIZATION')
+config = get_api_config()
 
 router = APIRouter()
 
@@ -25,7 +25,7 @@ class Signup(BaseModel):
 async def signup(signup: Signup):
     request_body = {
         "parent": {
-            "database_id": DATABASE_ID
+            "database_id": config.DATABASE_ID
         },
         "properties": {
             "discord_id": {
@@ -73,7 +73,7 @@ async def signup(signup: Signup):
         "https://api.notion.com/v1/pages",
         headers={
             "Content-Type": "application/json",
-            "Authorization": f"Bearer {AUTHORIZATION}",
+            "Authorization": f"Bearer {config.AUTHORIZATION}",
             "Notion-Version": "2022-06-28",
         },
         json=request_body
