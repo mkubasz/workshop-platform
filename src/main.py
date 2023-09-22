@@ -13,9 +13,6 @@ async def healthz():
     return {"status": "ok"}
 
 
-app.include_router(signup.router)
-app.include_router(attend_workshop.router)
-
 def get_application(config: ApiConfig) -> FastAPI:
     app = FastAPI(
         title=config.project_name,

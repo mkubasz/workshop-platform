@@ -1,6 +1,3 @@
-from fastapi.testclient import TestClient
-from src.main import app
-
 
 def test_signup(httpx_mock, client):
     httpx_mock.add_response(status_code=201)
