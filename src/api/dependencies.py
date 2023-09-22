@@ -1,5 +1,5 @@
 from functools import cache
-from config import ApiConfig
+from src.api.config import ApiConfig
 
 @cache
 def get_api_config() -> ApiConfig:
