@@ -35,7 +35,7 @@ To install the project and its dependencies, follow these steps:
     ```bash
     poetry install  
     ```
-    This will create a virtual environment and install all the required dependencies.
+    This will install all the required dependencies.
 
 ## Adding a New Package
 
