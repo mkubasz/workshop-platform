@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "workshop-platform"
+version = "0.1.0"
+description = ""
+authors = ["czakuou <pakata321@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.103.1"
+httpx = "^0.25.0"
+uvicorn = "^0.23.2"
+pydantic = "^2.3.0"
+pytest = "^7.4.2"
+pytest-httpx = "^0.26.0"
+pydantic-settings = "^2.0.3"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
