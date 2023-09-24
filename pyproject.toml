@@ -2,7 +2,7 @@
 name = "workshop-platform"
 version = "0.1.0"
 description = ""
-authors = ["czakuou <pakata321@gmail.com>"]
+authors = ["czakuou <pakata321@gmail.com>", "mkubasz <mkubasz@gmail.com>"]
 license = "MIT"
 readme = "README.md"
 
