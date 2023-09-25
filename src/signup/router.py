@@ -2,10 +2,8 @@ from datetime import datetime
 
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel
-from src.core.dependencies import get_api_config
 
-from sqlalchemy import create_engine, String, DateTime, URL
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import String, DateTime
 from sqlalchemy.orm import sessionmaker, Mapped, mapped_column
 
 from src.database import Base, connection
