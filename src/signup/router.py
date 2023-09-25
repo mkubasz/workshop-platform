@@ -1,14 +1,30 @@
 from datetime import datetime
 
-import httpx
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from pydantic import BaseModel
-from fastapi.responses import JSONResponse
-from src.core.dependencies import get_api_config
 
-config = get_api_config()
+from sqlalchemy import String, DateTime
+from sqlalchemy.orm import Mapped, mapped_column
+
+from src.database import Base, connection
 
 router = APIRouter()
+
+
+
+class Attendees(Base):
+    __tablename__ = "attendees"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(50))
+    password: Mapped[str] = mapped_column(String(256))
+    email: Mapped[str] = mapped_column(String(50))
+    invoice: Mapped[str] = mapped_column(String(512))
+    created_at: Mapped[DateTime] = mapped_column(
+        DateTime,
+        default=datetime.utcnow
+    )
+
 
 
 class Signup(BaseModel):
@@ -17,67 +33,16 @@ class Signup(BaseModel):
     password: str
     email: str
     invoice: str
-    created_at: datetime = datetime.now()
 
 
 @router.post("/signup", status_code=201)
-async def signup(signup: Signup):
-    request_body = {
-        "parent": {
-            "database_id": config.DATABASE_ID
-        },
-        "properties": {
-            "discord_id": {
-                "title": [
-                    {
-                        "text": {
-                            "content": signup.discord_id
-                        }
-                    }
-                ]
-            },
-            "name": {
-                "rich_text": [
-                    {
-                        "text": {
-                            "content": signup.name
-                        }
-                    }]
-            },
-            "password": {
-                "rich_text": [
-                    {
-                        "text": {
-                            "content": signup.password
-                        }
-                    }
-                ]
-            },
-            "email": {
-                "email": signup.email
-            },
-            "invoice": {
-                "rich_text": [
-                    {
-                        "text": {
-                            "content": signup.invoice
-                        }
-                    }
-                ]
-            }
-        }
-    }
-
-    status = httpx.post(
-        "https://api.notion.com/v1/pages",
-        headers={
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {config.AUTHORIZATION}",
-            "Notion-Version": "2022-06-28",
-        },
-        json=request_body
-    )
-    if status.status_code == 201:
-        return {"status": "ok"}
-
-    return JSONResponse(status_code=400, content={"status": "error"})
+async def signup(signup: Signup,
+                 session=Depends(connection)):
+    attendees = Attendees(
+        name=signup.name,
+        password=signup.password,
+              email=signup.email,
+              invoice=signup.invoice,)
+    session.add(attendees)
+    session.commit()
+    return {"status": "ok"}

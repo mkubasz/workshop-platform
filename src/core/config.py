@@ -6,8 +6,11 @@ class ApiConfig(BaseSettings):
     project_name: str = "workshop-platform"
     version: str = "dev"
     debug: bool = False
-    DATABASE_ID: str = ""
-    AUTHORIZATION: str = ""
+    DATABASE_HOST: str = ""
+    DATABASE_NAME: str = ""
+    DATABASE_USERNAME: str = ""
+    DATABASE_PASSWORD: str = ""
+    DATABASE_PORT: int = 5432
 
     allowed_hosts: tuple[str] = ("*",)
 
