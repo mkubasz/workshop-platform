@@ -29,13 +29,18 @@ To install the project and its dependencies, follow these steps:
    ```
 2. Install Poetry (if not already installed):
     ```bash
-    pip install poetry  
+    pip install poetry
     ```
-    Set up the project using Poetry: 
+    Set up the project using Poetry:
     ```bash
-    poetry install  
+    poetry install
     ```
     This will install all the required dependencies.
+3. Install pre-commit
+    ```bash
+    poetry run pre-commit install
+    ```
+    This will install pre-commit hooks to run before each commit. If any of the hooks fail, the commit will be aborted.
 
 ## Adding a New Package
 
@@ -47,11 +52,11 @@ To install the project and its dependencies, follow these steps:
 
 ## Adding a Development Package
 
-Development packages are dependencies that are only required during development, such as testing libraries or code formatting tools. Here's how to add a development package:\
+Development packages are dependencies that are only required during development, such as testing libraries or code formatting tools. Here's how to add a development package:
 1. Open a terminal and navigate to your project's root directory, where your pyproject.toml file is located.
 2. Use Poetry's add command with the --dev flag to add a package as a development dependency. Replace dev-package-name with the name of the development package you want to add:
     ```bash
-    poetry add --dev dev-package-name
+    poetry add --group dev dev-package-name
     ```
 3. To install all development dependencies (useful for continuous integration or other developers working on your project), you can run:
    ```bash
