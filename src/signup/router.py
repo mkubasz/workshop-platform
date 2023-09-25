@@ -36,7 +36,8 @@ class Signup(BaseModel):
 
 
 @router.post("/signup", status_code=201)
-async def signup(signup: Signup, session_connection: sessionmaker = Depends(connection)):
+async def signup(signup: Signup,
+                 session_connection: sessionmaker = Depends(connection)):
     attendees = Attendees(
         name=signup.name,
         password=signup.password,
