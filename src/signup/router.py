@@ -9,7 +9,40 @@ from src.core.dependencies import get_api_config
 config = get_api_config()
 
 router = APIRouter()
+from sqlalchemy import create_engine, String, DateTime, URL
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker, Mapped, mapped_column
 
+url_postgresql = URL.create(
+    drivername="postgresql",
+    username=config.DATABASE_USERNAME,
+    password=config.DATABASE_PASSWORD,
+    host=config.DATABASE_HOST,
+    port=5432,
+    database=config.DATABASE_NAME
+)
+engine = create_engine(
+     url_postgresql
+)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+Base = declarative_base()
+session = SessionLocal()
+
+
+class Attendees(Base):
+    __tablename__ = "attendees"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    name: Mapped[str] = mapped_column(String(50))
+    password: Mapped[str] = mapped_column(String(256))
+    email: Mapped[str] = mapped_column(String(50))
+    invoice: Mapped[str] = mapped_column(String(512))
+    created_at: Mapped[DateTime] = mapped_column(
+        DateTime,
+        default=datetime.utcnow
+    )
+
+
+Base.metadata.create_all(engine)
 
 class Signup(BaseModel):
     discord_id: str
@@ -17,67 +50,15 @@ class Signup(BaseModel):
     password: str
     email: str
     invoice: str
-    created_at: datetime = datetime.now()
 
 
 @router.post("/signup", status_code=201)
 async def signup(signup: Signup):
-    request_body = {
-        "parent": {
-            "database_id": config.DATABASE_ID
-        },
-        "properties": {
-            "discord_id": {
-                "title": [
-                    {
-                        "text": {
-                            "content": signup.discord_id
-                        }
-                    }
-                ]
-            },
-            "name": {
-                "rich_text": [
-                    {
-                        "text": {
-                            "content": signup.name
-                        }
-                    }]
-            },
-            "password": {
-                "rich_text": [
-                    {
-                        "text": {
-                            "content": signup.password
-                        }
-                    }
-                ]
-            },
-            "email": {
-                "email": signup.email
-            },
-            "invoice": {
-                "rich_text": [
-                    {
-                        "text": {
-                            "content": signup.invoice
-                        }
-                    }
-                ]
-            }
-        }
-    }
-
-    status = httpx.post(
-        "https://api.notion.com/v1/pages",
-        headers={
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {config.AUTHORIZATION}",
-            "Notion-Version": "2022-06-28",
-        },
-        json=request_body
-    )
-    if status.status_code == 201:
-        return {"status": "ok"}
-
-    return JSONResponse(status_code=400, content={"status": "error"})
+    attendees = Attendees(
+        name=signup.name,
+        password=signup.password,
+              email=signup.email,
+              invoice=signup.invoice,)
+    session.add(attendees)
+    session.commit()
+    return {"status": "ok"}
