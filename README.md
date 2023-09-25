@@ -36,6 +36,11 @@ To install the project and its dependencies, follow these steps:
     poetry install
     ```
     This will install all the required dependencies.
+3. Install pre-commit
+    ```bash
+    poetry run pre-commit install
+    ```
+    This will install pre-commit hooks to run before each commit. If any of the hooks fail, the commit will be aborted.
 
 ## Adding a New Package
 
