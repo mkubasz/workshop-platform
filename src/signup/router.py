@@ -1,17 +1,16 @@
 from datetime import datetime
 
-import httpx
 from fastapi import APIRouter
 from pydantic import BaseModel
-from fastapi.responses import JSONResponse
 from src.core.dependencies import get_api_config
+
+from sqlalchemy import create_engine, String, DateTime, URL
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker, Mapped, mapped_column
 
 config = get_api_config()
 
 router = APIRouter()
-from sqlalchemy import create_engine, String, DateTime, URL
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, Mapped, mapped_column
 
 url_postgresql = URL.create(
     drivername="postgresql",
