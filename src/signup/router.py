@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 from src.core.dependencies import get_api_config
 
@@ -8,28 +8,15 @@ from sqlalchemy import create_engine, String, DateTime, URL
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, Mapped, mapped_column
 
-config = get_api_config()
+from src.database import Base, connection
 
 router = APIRouter()
 
-url_postgresql = URL.create(
-    drivername="postgresql",
-    username=config.DATABASE_USERNAME,
-    password=config.DATABASE_PASSWORD,
-    host=config.DATABASE_HOST,
-    port=5432,
-    database=config.DATABASE_NAME
-)
-engine = create_engine(
-     url_postgresql
-)
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-Base = declarative_base()
-session = SessionLocal()
 
 
 class Attendees(Base):
     __tablename__ = "attendees"
+
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(50))
     password: Mapped[str] = mapped_column(String(256))
@@ -41,7 +28,6 @@ class Attendees(Base):
     )
 
 
-Base.metadata.create_all(engine)
 
 class Signup(BaseModel):
     discord_id: str
@@ -52,12 +38,13 @@ class Signup(BaseModel):
 
 
 @router.post("/signup", status_code=201)
-async def signup(signup: Signup):
+async def signup(signup: Signup, session_connection: sessionmaker = Depends(connection)):
     attendees = Attendees(
         name=signup.name,
         password=signup.password,
               email=signup.email,
               invoice=signup.invoice,)
+    session = session_connection()
     session.add(attendees)
     session.commit()
     return {"status": "ok"}
