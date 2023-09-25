@@ -28,5 +28,5 @@ async def test_connection():
 
 @pytest.fixture
 def client(fastapi_app: FastAPI) -> TestClient:
-    fastapi_app.dependency_overrides[connection] = test_connection
+    fastapi_app.dependency_overrides[connection] = test_connection()
     return TestClient(app=fastapi_app)

@@ -10,6 +10,7 @@ class ApiConfig(BaseSettings):
     DATABASE_NAME: str = ""
     DATABASE_USERNAME: str = ""
     DATABASE_PASSWORD: str = ""
+    DATABASE_PORT: int = 5432
 
     allowed_hosts: tuple[str] = ("*",)
 

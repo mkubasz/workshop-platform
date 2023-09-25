@@ -15,7 +15,7 @@ url_postgresql = URL.create(
 engine = create_engine(
      url_postgresql
 )
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+Session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
 
@@ -24,5 +24,5 @@ def initialize_db():
 
 
 async def connection():
-    async with SessionLocal() as session:
+    async with Session() as session:
         yield session
