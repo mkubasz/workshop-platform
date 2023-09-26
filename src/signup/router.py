@@ -12,6 +12,7 @@ from src.database import Base, connection, Session
 router = APIRouter()
 
 
+
 class Signup(BaseModel):
     discord_id: str = Field(description="This is name of user find in Discord", examples=["mkubasz"])
     name: str = Field(description="You can use any name")
