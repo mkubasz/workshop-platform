@@ -7,18 +7,22 @@ from pydantic import BaseModel, Field, EmailStr
 from sqlalchemy import String, DateTime
 from sqlalchemy.orm import Mapped, mapped_column
 
-from src.database import Base, connection, Session
+from src.database import Base, connection
 
 router = APIRouter()
 
 
-
 class Signup(BaseModel):
-    discord_id: str = Field(description="This is name of user find in Discord", examples=["mkubasz"])
+    discord_id: str = Field(
+        description="This is name of user find in Discord",
+        examples=["mkubasz"]
+    )
     name: str = Field(description="You can use any name")
     password: str = Field(description="This value will be hashed", min_length=8)
     email: EmailStr
-    invoice: str = Field(description="Information should contain VAT number, Company name, address")
+    invoice: str = Field(
+        description="Information should contain VAT number, Company name, address"
+    )
 
 
 class Attendees(Base):
