@@ -1,15 +1,23 @@
 from datetime import datetime
+from typing import Annotated
 
-from fastapi import APIRouter, Depends
-from pydantic import BaseModel
+from fastapi import APIRouter, Depends, Body
+from pydantic import BaseModel, Field, EmailStr
 
 from sqlalchemy import String, DateTime
 from sqlalchemy.orm import Mapped, mapped_column
 
-from src.database import Base, connection
+from src.database import Base, connection, Session
 
 router = APIRouter()
 
+
+class Signup(BaseModel):
+    discord_id: str = Field(description="This is name of user find in Discord", examples=["mkubasz"])
+    name: str = Field(description="You can use any name")
+    password: str = Field(description="This value will be hashed", min_length=8)
+    email: EmailStr
+    invoice: str = Field(description="Information should contain VAT number, Company name, address")
 
 
 class Attendees(Base):
@@ -26,23 +34,15 @@ class Attendees(Base):
     )
 
 
-
-class Signup(BaseModel):
-    discord_id: str
-    name: str
-    password: str
-    email: str
-    invoice: str
-
-
 @router.post("/signup", status_code=201)
-async def signup(signup: Signup,
+async def signup(signup: Annotated[Signup, Body()],
                  session=Depends(connection)):
     attendees = Attendees(
         name=signup.name,
         password=signup.password,
-              email=signup.email,
-              invoice=signup.invoice,)
+        email=signup.email,
+        invoice=signup.invoice,
+    )
     session.add(attendees)
     session.commit()
     return {"status": "ok"}
