@@ -1,4 +1,6 @@
 from fastapi import FastAPI, Depends
+from fastapi.security import HTTPBasic
+
 from src.core.config import ApiConfig
 from src.attend_workshop.router import router as attend_workshop_router
 from src.database import connection

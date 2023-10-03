@@ -6,7 +6,7 @@ from src.attend_workshop.domain import (
     check_if_attendee_has_already_attended,
     check_if_workshop_has_exceeded_limits,
     assign_attendee_to_workshop)
-from src.attend_workshop.router import AttendWorkshop
+from src.attend_workshop.model import AttendWorkshop
 from src.core.event_handler import event_handler
 
 

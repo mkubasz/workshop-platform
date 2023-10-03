@@ -7,7 +7,7 @@ from sqlalchemy import String, DateTime, LargeBinary
 from sqlalchemy.orm import Mapped, mapped_column
 
 from src.auth.password_util import hash_password
-from src.database import Base, connection
+from src.database import Base, connection, Session
 
 router = APIRouter()
 
@@ -41,13 +41,14 @@ class Attendees(Base):
 
 @router.post("/signup", status_code=201)
 async def signup(signup: Annotated[Signup, Body()],
-                 session: Annotated[Base, Depends(connection)]):
+                 session: Annotated[Session, Depends(connection)]):
     attendees = Attendees(
         name=signup.name,
         password=hash_password(signup.password),
         email=signup.email,
         invoice=signup.invoice,
     )
-    session.add(attendees)
-    session.commit()
+    with session.begin():
+        session.add(attendees)
+
     return {"status": "ok"}
