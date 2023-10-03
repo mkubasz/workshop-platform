@@ -15,6 +15,7 @@ url_postgresql = URL.create(
 engine = create_engine(
      url_postgresql
 )
+
 Session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
