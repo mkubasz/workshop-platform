@@ -1,12 +1,12 @@
 from datetime import datetime
 from typing import Annotated
-
 from fastapi import APIRouter, Depends, Body
 from pydantic import BaseModel, Field, EmailStr
 
-from sqlalchemy import String, DateTime
+from sqlalchemy import String, DateTime, LargeBinary
 from sqlalchemy.orm import Mapped, mapped_column
 
+from src.auth.password_util import hash_password
 from src.database import Base, connection
 
 router = APIRouter()
@@ -30,7 +30,7 @@ class Attendees(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(50))
-    password: Mapped[str] = mapped_column(String(256))
+    password: Mapped[LargeBinary] = mapped_column(LargeBinary(256))
     email: Mapped[str] = mapped_column(String(50))
     invoice: Mapped[str] = mapped_column(String(512))
     created_at: Mapped[DateTime] = mapped_column(
@@ -41,10 +41,10 @@ class Attendees(Base):
 
 @router.post("/signup", status_code=201)
 async def signup(signup: Annotated[Signup, Body()],
-                 session=Depends(connection)):
+                 session: Annotated[Base, Depends(connection)]):
     attendees = Attendees(
         name=signup.name,
-        password=signup.password,
+        password=hash_password(signup.password),
         email=signup.email,
         invoice=signup.invoice,
     )
